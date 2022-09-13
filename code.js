@@ -14,8 +14,8 @@ const getPossibleCoins = (fareAmount, gavvoPieces) => {
 
     if (totSum < fareAmount) return "not possible";
 
-    let possibleFares = [0];
-    let lastGavvoForFare = {};
+    let possibleFares = [0];    //possible fare amout with combination of gavvoes
+    let lastGavvoForFare = {};  //last used gavvo piece
 
     for (let gavvo of gavvoPieces) {
         if (fareAmount in lastGavvoForFare) break;
@@ -25,20 +25,21 @@ const getPossibleCoins = (fareAmount, gavvoPieces) => {
             if (s + gavvo > fareAmount) break;
             if((s + gavvo) in lastGavvoForFare) continue;
 
-            lastGavvoForFare[s + gavvo] = gavvo;
-            possibleFares.push(s + gavvo);
+            lastGavvoForFare[s + gavvo] = gavvo;    //keep the last used gavvo piece with fare amout
+            possibleFares.push(s + gavvo);  //add new fare amout to possible fare amout array
         }
-        possibleFares = [...new Set(possibleFares)];
+        possibleFares = [...new Set(possibleFares)];    //remove duplicates
     }
-    if (!(fareAmount in lastGavvoForFare)) return "not possible";
+    if (!(fareAmount in lastGavvoForFare)) return "not possible";   //not possible if there's no last used gavvo
     return getUsedGavvoes(fareAmount, lastGavvoForFare);
 }
 
+//find used gavvoes for fare amount
 const getUsedGavvoes = (fareAmount, lastGavvoForFare) => {
     let usedGavvoes = [];
     while (fareAmount) {
-        usedGavvoes.push(lastGavvoForFare[fareAmount]);
-        fareAmount -= lastGavvoForFare[fareAmount];
+        usedGavvoes.push(lastGavvoForFare[fareAmount]); //get last used gavvo piece
+        fareAmount -= lastGavvoForFare[fareAmount]; //decrease the fare amout
     }
     return usedGavvoes;
 }
